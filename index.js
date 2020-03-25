@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const manager = require('./manager');
 
 let roles = {
     TE1A: null,
@@ -59,4 +58,4 @@ client.on('message', msg => {
     }
 });
 
-client.login('NjkyMDM5ODE4ODY3Mzc2MjA1.Xnou3A.tbJlVdx4lLxvB97Bvpyhxhb3n3Y');    
+client.login('NjkyMDM5ODE4ODY3Mzc2MjA1.XnuDuw.CTpSaXVdkaGgtZcn0hS7JqaX1jo');    
