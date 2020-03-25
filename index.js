@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-
+const config = require('./config.json');
 let roles = {
     TE1A: null,
     TE1B: null,
@@ -18,31 +18,33 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-    
-    if(msg.member.hasPermission('ADMINISTRATOR') && msg.content.startsWith('+')){
-        const cmd = String(msg.content).substr(1, msg.content.length);
-        const args = msg.content.slice(1).split(' ');
+    if(msg.member !== null && msg.member.hasPermission('ADMINISTRATOR') && msg.content.startsWith('+')){
+        let args = msg.content.slice(1).split(' ');
+        const cmd = args[0];
+        args = args.splice(1);
 
-        console.log(cmd);
-        switch(args[0]){
+        switch(cmd){
             case 'närvaro':{
                 console.log("Kollar närvaro...");
                 //manager.check(msg, args[1].toLowerCase());
                 if(msg.member.voice.channel) {
                     msg.guild.roles.cache.map(role => {
 
-                        if(role.name === args[1].toLowerCase()){
-
+                        if(role.name.toLowerCase() === args[0].toLowerCase()){
+                            const membersLength = role.members.size;
+                            let missingMembers = ' ';
                             let totalMembers = 0;
                             role.members.map((member) => {
                                 if(member.voice.channel !== null && member.voice.channel.id === msg.member.voice.channel.id){
                                     totalMembers += 1; 
                                 }
-                                else {
-                                    msg.channel.send(`<@${member.user.id}> gå med i samtalet! Lektionen har börjat`);
+                                else {  
+                                    member.send("Din lektion har nu börjat! Gå in i TEKNIK discorden och gå med i samtalet.");
+                                    missingMembers += `, ${member.nickname ? member.nickname : member.user.username}`;
                                 }
                             });
-                            const membersLength = role.members.size;
+                            
+                            msg.author.send(`${new Date()}\nNärvaro koll\n\nEj närvarande: ${missingMembers}`);
                             console.log(`Total members ${role.members.size}`);
                             msg.reply(`${totalMembers} av ${membersLength} med i samtalet.`);
                         }
@@ -58,4 +60,4 @@ client.on('message', msg => {
     }
 });
 
-client.login('NjkyMDM5ODE4ODY3Mzc2MjA1.XnuDuw.CTpSaXVdkaGgtZcn0hS7JqaX1jo');    
+client.login(config.token);    
