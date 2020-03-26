@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const config = require('./config.json');
+const roleNames = ['alfa','beta','gamma'];
+let debug = false;
 let roles = {
     TE1A: null,
     TE1B: null,
@@ -10,9 +12,9 @@ let roles = {
 client.on('ready', () => {
   console.log(`Loggade in som ${client.user.tag}! 😊`);
   client.guilds.cache.map((guild) => {
-    roles.TE1B = guild.roles.cache.find(role => role.name === 'te1b');
-    roles.TE1A = guild.roles.cache.find(role => role.name === 'te1a');
-    roles.TE1C = guild.roles.cache.find(role => role.name === 'te1c');
+    roles.TE1B = guild.roles.cache.find(role => role.name === roleNames[0]);
+    roles.TE1A = guild.roles.cache.find(role => role.name === roleNames[1]);
+    roles.TE1C = guild.roles.cache.find(role => role.name === roleNames[2]);
   });
   client.user.setActivity('dina betyg..', { type: 'WATCHING' });
 });
@@ -39,7 +41,7 @@ client.on('message', msg => {
                                     totalMembers += 1; 
                                 }
                                 else {  
-                                    member.send("Din lektion har nu börjat! Gå in i TEKNIK discorden och gå med i samtalet.");
+                                    if(!debug) member.send("Din lektion har nu börjat! Gå in i TEKNIK discorden och gå med i samtalet.");
                                     missingMembers += `, ${member.nickname ? member.nickname : member.user.username}`;
                                 }
                             });
@@ -53,6 +55,9 @@ client.on('message', msg => {
                     msg.reply('Du måste vara i en röstkanal för att skriva detta kommandot. 😌')
                 }
 
+            }
+            case 'debug':{
+                debug = true;
             }
             
         }
